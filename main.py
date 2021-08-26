@@ -37,8 +37,8 @@ def index():
             try:
                 valid_Users = ProfileUser(name=request.form['userName'], middle_name=request.form['userSurname'],
                                     bornDate=request.form['dateBorn'], gender=request.form['gender'])
-                session.add(valid_Users)
-                session.flush()
+                session.add(valid_Users)  # если бы не было этих двух строк я бы завернул эти две переменные в функцию
+                session.flush()  # и сделал к ней декоратор с сессией, а так, ничего придумать не могу :С
                 valid_Comment = Comment(education=request.form['education'], commentUser=request.form['comment'],
                                         citizenship=request.form['citizen'], phone=request.form['phone'], user_id=valid_Users.id)
                 session.add(valid_Comment)

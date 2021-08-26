@@ -89,12 +89,13 @@
     document.addEventListener('DOMContentLoaded' , function(){
     const form = document.getElementById('form');
     form.addEventListener('submit', formSend);
-    var name = document.querySelector('name').input.value;
-    var surname = document.querySelector('surname').input.value;
 
     async function formSend(e){
     e.preventDefault();
 
+    var name = document.getElementById('name').value;
+    var surname = document.getElementById('surname').value;
+    console.log(surname)
     let formData = new FormData(form);
     if(name & surname & name[0]==name[0].toUpperCase & surname[0]==surname[0].toUpperCase) {
     let response = await fetch('/',{

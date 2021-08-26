@@ -1,48 +1,58 @@
 from flask import Flask, render_template, request
-from flask_sqlalchemy import SQLAlchemy
-
-
+from sqlalchemy import create_engine, select, Table, Column, Integer, String,  ForeignKey, DateTime, Text
+from sqlalchemy.orm import Session
+from sqlalchemy.orm import declarative_base
+Base = declarative_base()
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://host:password@adres/dataBase'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-db = SQLAlchemy(app)
+engine = create_engine('postgresql://sladick_db1:203320v@localhost/postgres', echo=True)
 
 
-class Profile(db.Model):
-    user_id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50), nullable=True)
-    middle_name = db.Column(db.String(50), nullable=True)
-    bornDate = db.Column(db.DateTime, nullable=True)
-    gender = db.Column(db.String(10), nullable=True)
+class ProfileUser(Base):
+    __tablename__ = 'profile'
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String(50), nullable=True)
+    middle_name = Column(String(50), nullable=True)
+    bornDate = Column(DateTime, nullable=True)
+    gender = Column(String(10), nullable=True)
 
 
-class Comment(db.Model):
-    education = db.Column(db.Integer, nullable=True)
-    comment = db.Column(db.Text, nullable=True)
-    citizenship = db.Column(db.Text, nullable=True)
+class Comment(Base):
+    __tablename__ = 'comment'
 
-    user_id = db.Column(db.Integer, db.ForeignKey('profile.user_id'), primary_key=True)
+    education = Column(Integer, nullable=True)
+    commentUser = Column(Text, nullable=True)
+    citizenship = Column(Text, nullable=True)
+    phone = Column(Text, nullable=True)
+    user_id = Column(Integer, ForeignKey('profile.id'), primary_key=True)
+
+# Base.metadata.create_all(engine)
+# def my_shiny_new_decorator(function_to_decorate):
+#     def the_wrapper_around_the_original_function():
+#         Base.metadata.create_all(engine)
+#         function_to_decorate()
+#         return the_wrapper_around_the_original_function
 
 
+# @my_shiny_new_decorator
 @app.route('/', methods=('POST', 'GET'))
 def index():
     if request.method == "POST":
-
-        try:
-            valid_Users = Profile(name=request.form['userName'], middle_name=request.form['userSurname'],
-                                bornDate=request.form['dateBorn'], gender=request.form['gender'])
-            db.session.add(valid_Users)
-            db.session.flush()
-
-            valid_Comment = Comment(education=request.form['education'], comment=request.form['comment'],
-                                    citizenship=request.form['citizen'], user_id = valid_Users.user_id)
-
-            db.session.add(valid_Comment)
-            db.session.commit()
-        except:
-            db.session.rollback()
-            print('error db')
+        with Session(engine) as session:
+            session.begin()
+            try:
+                valid_Users = ProfileUser(name=request.form['userName'], middle_name=request.form['userSurname'],
+                                    bornDate=request.form['dateBorn'], gender=request.form['gender'])
+                session.add(valid_Users)
+                session.flush()
+                valid_Comment = Comment(education=request.form['education'], commentUser=request.form['comment'],
+                                        citizenship=request.form['citizen'], phone=request.form['phone'], user_id=valid_Users.id)
+                session.add(valid_Comment)
+            except:
+                session.rollback()
+                raise
+            else:
+                session.commit()
 
     return render_template("picture.html")
 

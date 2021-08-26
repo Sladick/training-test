@@ -4,13 +4,15 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/imask"></script>
+<!--    <link rel="stylesheet" href="static/js/jquery.js">-->
 </head>
 <body>
-<form method="post" id="form1" action="/">
+<form method="post" id="form" action="/">
     <h4>Имя</h4>
-    <input type="text" name="userName" size="40">
+    <input type="text" name="userName" id="name" size="40">
     <h4>Фамилия</h4>
-    <input type="text" name="userSurname" size="40">
+    <input type="text" name="userSurname" id="surname" size="40">
 
     <div><h4>Пол:</h4>
    <input type="radio" name="gender" value="Man">Мужчина
@@ -36,7 +38,15 @@
 
     <h4>О себе:</h4>
     <textarea name="comment" id="comment"></textarea>
-
+    <br>
+    <br>
+    <div class="row">
+        <label for="phone">Телефон</label>
+    </div>
+    <div class="row">
+        <input type="text" name="phone" id="phone" placeholder="+7(XXX)XXX-XX-XX"/>
+    </div>
+    <br>
     <div>
         <button id="save" type="submit">Сохранить</button>
     </div>
@@ -45,8 +55,8 @@
 <script>
 /* переопределить поведение кнопки "Отправить" */
         $(document).ready(function () {
-            $("#form1" ).submit(function( event ) {
-              sendAjaxForm("form1");
+            $("#form" ).submit(function( event ) {
+              sendAjaxForm("form");
               event.preventDefault();
             });
         });
@@ -61,7 +71,43 @@
                 data: form.serialize(),
             });
             form.trigger('reset');
-        }
+        };
+</script>
+<script>
+    var element = document.getElementById('phone');
+    var maskOptions = {
+    mask: '+{7}(000)000-00-00'
+    };
+    var mask = IMask(element, maskOptions);
+</script>
+
+
+
+
+<script>
+    'use strict'
+    document.addEventListener('DOMContentLoaded' , function(){
+    const form = document.getElementById('form');
+    form.addEventListener('submit', formSend);
+    var name = document.querySelector('name').input.value;
+    var surname = document.querySelector('surname').input.value;
+
+    async function formSend(e){
+    e.preventDefault();
+
+    let formData = new FormData(form);
+    if(name & surname & name[0]==name[0].toUpperCase & surname[0]==surname[0].toUpperCase) {
+    let response = await fetch('/',{
+    method:'POST',
+    body: formData
+    });
+    if(response.ok){
+    let result = await response.json();
+    form.reset();
+    }
+    }
+    }
+    });
 </script>
 </body>
 </html>

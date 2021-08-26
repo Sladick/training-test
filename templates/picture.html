@@ -48,10 +48,31 @@
     </div>
     <br>
     <div>
-        <button id="save" type="submit" disabled>Сохранить</button>
+        <button id="save" type="submit">Сохранить</button>
     </div>
 </form>
 <div id="msg"></div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+	var name = document.getElementById('name');
+	var button = document.getElementById('save');
+	var surname = document.getElementById('surname');
+	document.getElementById('save').disabled = true;
+	name.oninput = function() {
+		if (name.value.length > 0 && surname.value.length > 0) {
+			if (name.value[0] == name.value[0].toUpperCase() && surname.value[0] == surname.value[0].toUpperCase()) {
+				document.getElementById('save').disabled = false;
+			} else if (name.value == '') {
+				document.getElementById('save').disabled = true;
+			} else {
+				document.getElementById('save').disabled = true;
+			}
+		}
+
+	}
+});
+</script>
 <script>
 /* переопределить поведение кнопки "Отправить" */
         $(document).ready(function () {
@@ -84,27 +105,6 @@
 </script>
 
 
-
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-	var name = document.getElementById('name');
-	var button = document.getElementById('save');
-	var surname = document.getElementById('surname');
-	name.oninput = function() {
-		if (name.value.length > 0 && surname.value.length > 0) {
-			if (name.value[0] == name.value[0].toUpperCase() && surname.value[0] == surname.value[0].toUpperCase()) {
-				button.removeAttribute('disabled');
-			} else if (name.value == '') {
-				button.setAttribute('disabled', true);
-			} else {
-				button.setAttribute('disabled', true);
-			}
-		}
-
-	}
-});
-</script>
 </body>
 </html>
 

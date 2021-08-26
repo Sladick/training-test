@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request
-from sqlalchemy import create_engine, select, Table, Column, Integer, String,  ForeignKey, DateTime, Text
+from sqlalchemy import create_engine, Column, Integer, String,  ForeignKey, DateTime, Text
 from sqlalchemy.orm import Session
 from sqlalchemy.orm import declarative_base
 Base = declarative_base()
@@ -27,14 +27,8 @@ class Comment(Base):
     user_id = Column(Integer, ForeignKey('profile.id'), primary_key=True)
 
 # Base.metadata.create_all(engine)
-# def my_shiny_new_decorator(function_to_decorate):
-#     def the_wrapper_around_the_original_function():
-#         Base.metadata.create_all(engine)
-#         function_to_decorate()
-#         return the_wrapper_around_the_original_function
 
 
-# @my_shiny_new_decorator
 @app.route('/', methods=('POST', 'GET'))
 def index():
     if request.method == "POST":

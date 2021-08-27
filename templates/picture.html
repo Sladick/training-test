@@ -5,7 +5,6 @@
     <title>Title</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://unpkg.com/imask"></script>
-<!--    <link rel="stylesheet" href="static/js/jquery.js">-->
 </head>
 <body>
 <form method="post" id="form" action="/">
@@ -53,6 +52,8 @@
 </form>
 <div id="msg"></div>
 
+
+<!-- Валидация формы-->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
 	var name = document.getElementById('name');
@@ -73,6 +74,9 @@
 	}
 });
 </script>
+
+
+
 <script>
 /* переопределить поведение кнопки "Отправить" */
         $(document).ready(function () {
@@ -94,17 +98,15 @@
             form.trigger('reset');
         };
 </script>
+
+<!--Маска-->
 <script>
     var element = document.getElementById('phone');
     var maskOptions = {
     mask: '+{7}(000)000-00-00'
     };
     var mask = IMask(element, maskOptions);
-
-
 </script>
-
-
 </body>
 </html>
 
